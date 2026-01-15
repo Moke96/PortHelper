@@ -77,7 +77,7 @@ local RAIDS = {
         instanceID = 548,
         mapID = 332,
         entranceMapIDs = {102},
-        entranceZoneIDs = {1946}, -- Zangarmarsh (Coilfang Reservoir)
+        entranceZoneIDs = {1946}, -- Zangarmarsh
     },
     ["Tempest Keep: The Eye"] = {
         instanceID = 550,
@@ -89,7 +89,7 @@ local RAIDS = {
         instanceID = 534,
         mapID = 329,
         entranceMapIDs = {71},
-        entranceZoneIDs = {1542}, -- Tanaris (Caverns of Time)
+        entranceZoneIDs = {1542}, -- Tanaris
     },
     ["Black Temple"] = {
         instanceID = 564,
