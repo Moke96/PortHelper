@@ -11,6 +11,7 @@ local defaults = {
 -- Classic Era Raid locations with their instance IDs (language-independent)
 -- instanceID is used by GetInstanceInfo() and is the same across all locales
 local RAIDS = {
+    -- Classic Era Raids
     ["Molten Core"] = { 
         instanceID = 409,  -- Instance ID from GetInstanceInfo()
         mapID = 232,       -- UI Map ID
@@ -53,6 +54,62 @@ local RAIDS = {
         entranceMapIDs = {23},
         entranceZoneIDs = {1423}, -- Eastern Plaguelands
     },
+    -- The Burning Crusade Raids
+    ["Karazhan"] = {
+        instanceID = 532,
+        mapID = 350,
+        entranceMapIDs = {42},
+        entranceZoneIDs = {1430}, -- Deadwind Pass
+    },
+    ["Gruul's Lair"] = {
+        instanceID = 565,
+        mapID = 330,
+        entranceMapIDs = {105},
+        entranceZoneIDs = {1949}, -- Blade's Edge Mountains
+    },
+    ["Magtheridon's Lair"] = {
+        instanceID = 544,
+        mapID = 331,
+        entranceMapIDs = {100},
+        entranceZoneIDs = {1944}, -- Hellfire Peninsula
+    },
+    ["Serpentshrine Cavern"] = {
+        instanceID = 548,
+        mapID = 332,
+        entranceMapIDs = {102},
+        entranceZoneIDs = {1946}, -- Zangarmarsh (Coilfang Reservoir)
+    },
+    ["Tempest Keep: The Eye"] = {
+        instanceID = 550,
+        mapID = 334,
+        entranceMapIDs = {109},
+        entranceZoneIDs = {1953}, -- Netherstorm
+    },
+    ["Battle for Mount Hyjal"] = {
+        instanceID = 534,
+        mapID = 329,
+        entranceMapIDs = {71},
+        entranceZoneIDs = {1542}, -- Tanaris (Caverns of Time)
+    },
+    ["Black Temple"] = {
+        instanceID = 564,
+        mapID = 340,
+        entranceMapIDs = {104},
+        entranceZoneIDs = {1948}, -- Shadowmoon Valley
+    },
+    ["Sunwell Plateau"] = {
+        instanceID = 580,
+        mapID = 335,
+        entranceMapIDs = {122},
+        entranceZoneIDs = {1957}, -- Isle of Quel'Danas
+    },
+    ["Zul'Aman"] = {
+        instanceID = 568,
+        mapID = 333,
+        entranceMapIDs = {21},
+        entranceZoneIDs = {1942}, -- Ghostlands
+    },
+    -- Other (generic option)
     ["Other (Nearby Check)"] = {
         instanceID = nil,  -- No specific instance
         mapID = nil,
@@ -74,6 +131,16 @@ if locale == "deDE" then
     L["Stranglethorn Vale"] = "Schlingendorntal"
     L["Silithus"] = "Silithus"
     L["Eastern Plaguelands"] = "Östliche Pestländer"
+    -- TBC zones
+    L["Deadwind Pass"] = "Gebirgspass der Totenwinde"
+    L["Blade's Edge Mountains"] = "Schergrat"
+    L["Hellfire Peninsula"] = "Höllenfeuerhalbinsel"
+    L["Zangarmarsh"] = "Zangarmarschen"
+    L["Netherstorm"] = "Nethersturm"
+    L["Tanaris"] = "Tanaris"
+    L["Shadowmoon Valley"] = "Schattenmondtal"
+    L["Isle of Quel'Danas"] = "Insel von Quel'Danas"
+    L["Ghostlands"] = "Geisterlande"
 elseif locale == "frFR" then
     L["Burning Steppes"] = "Steppes ardentes"
     L["Searing Gorge"] = "Gorge des Vents brûlants"
@@ -82,6 +149,16 @@ elseif locale == "frFR" then
     L["Stranglethorn Vale"] = "Vallée de Strangleronce"
     L["Silithus"] = "Silithus"
     L["Eastern Plaguelands"] = "Maleterres de l'est"
+    -- TBC zones
+    L["Deadwind Pass"] = "Défilé de Deuillevent"
+    L["Blade's Edge Mountains"] = "Les Tranchantes"
+    L["Hellfire Peninsula"] = "Péninsule des Flammes infernales"
+    L["Zangarmarsh"] = "Marécage de Zangar"
+    L["Netherstorm"] = "Raz-de-Néant"
+    L["Tanaris"] = "Tanaris"
+    L["Shadowmoon Valley"] = "Vallée d'Ombrelune"
+    L["Isle of Quel'Danas"] = "Île de Quel'Danas"
+    L["Ghostlands"] = "Les Terres fantômes"
 elseif locale == "esES" or locale == "esMX" then
     L["Burning Steppes"] = "Las Estepas Ardientes"
     L["Searing Gorge"] = "La Garganta de Fuego"
@@ -90,6 +167,16 @@ elseif locale == "esES" or locale == "esMX" then
     L["Stranglethorn Vale"] = "Vega de Tuercespina"
     L["Silithus"] = "Silithus"
     L["Eastern Plaguelands"] = "Tierras de la Peste del Este"
+    -- TBC zones
+    L["Deadwind Pass"] = "Paso de la Muerte"
+    L["Blade's Edge Mountains"] = "Montañas Filospada"
+    L["Hellfire Peninsula"] = "Península del Fuego Infernal"
+    L["Zangarmarsh"] = "Marisma de Zangar"
+    L["Netherstorm"] = "Tormenta Abisal"
+    L["Tanaris"] = "Tanaris"
+    L["Shadowmoon Valley"] = "Valle Sombraluna"
+    L["Isle of Quel'Danas"] = "Isla de Quel'Danas"
+    L["Ghostlands"] = "Tierras Fantasma"
 elseif locale == "ruRU" then
     L["Burning Steppes"] = "Пылающие степи"
     L["Searing Gorge"] = "Тлеющее ущелье"
@@ -98,6 +185,16 @@ elseif locale == "ruRU" then
     L["Stranglethorn Vale"] = "Тернистая долина"
     L["Silithus"] = "Силитус"
     L["Eastern Plaguelands"] = "Восточные Чумные земли"
+    -- TBC zones
+    L["Deadwind Pass"] = "Перевал Мертвого Ветра"
+    L["Blade's Edge Mountains"] = "Острогорье"
+    L["Hellfire Peninsula"] = "Полуостров Адского Пламени"
+    L["Zangarmarsh"] = "Зангартопь"
+    L["Netherstorm"] = "Пустоверть"
+    L["Tanaris"] = "Танарис"
+    L["Shadowmoon Valley"] = "Долина Призрачной Луны"
+    L["Isle of Quel'Danas"] = "Остров Кель'Данас"
+    L["Ghostlands"] = "Призрачные земли"
 else -- Default English (enUS, enGB)
     L["Burning Steppes"] = "Burning Steppes"
     L["Searing Gorge"] = "Searing Gorge"
@@ -106,6 +203,16 @@ else -- Default English (enUS, enGB)
     L["Stranglethorn Vale"] = "Stranglethorn Vale"
     L["Silithus"] = "Silithus"
     L["Eastern Plaguelands"] = "Eastern Plaguelands"
+    -- TBC zones
+    L["Deadwind Pass"] = "Deadwind Pass"
+    L["Blade's Edge Mountains"] = "Blade's Edge Mountains"
+    L["Hellfire Peninsula"] = "Hellfire Peninsula"
+    L["Zangarmarsh"] = "Zangarmarsh"
+    L["Netherstorm"] = "Netherstorm"
+    L["Tanaris"] = "Tanaris"
+    L["Shadowmoon Valley"] = "Shadowmoon Valley"
+    L["Isle of Quel'Danas"] = "Isle of Quel'Danas"
+    L["Ghostlands"] = "Ghostlands"
 end
 
 -- Proximity distance (in yards) to consider someone "close"
