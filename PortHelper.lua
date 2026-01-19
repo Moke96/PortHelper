@@ -230,7 +230,7 @@ local function CreateMainFrame()
     -- Help text
     local helpText = PortHelper:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     helpText:SetPoint("BOTTOM", 0, 15)
-    helpText:SetText("Left: Target | Right: Summon")
+    helpText:SetText("L: Target | R: Summon | M: Announce")
     helpText:SetTextColor(0.7, 0.7, 0.7)
     
     PortHelper:Hide()
@@ -543,6 +543,7 @@ function addon:UpdateListDisplay()
             GameTooltip:AddLine(" ")
             GameTooltip:AddLine("Left-click: Target", 0.5, 1, 0.5)
             GameTooltip:AddLine("Right-click: Cast Ritual of Summoning", 1, 0.5, 0.5)
+            GameTooltip:AddLine("Middle-click: Announce port (Meeting Stone)", 0.5, 0.8, 1)
             GameTooltip:AddLine("(Target first with left-click)", 0.6, 0.6, 0.6)
             GameTooltip:Show()
         end)
@@ -570,6 +571,9 @@ function addon:UpdateListDisplay()
         -- Right-click: cast summon spell (target must be selected first via left-click)
         btn:SetAttribute("type2", "spell")
         btn:SetAttribute("spell", "698")  -- 698 = Ritual of Summoning spell ID
+        
+        -- Middle-click: just announce (for Meeting Stone usage)
+        btn:SetAttribute("type3", "target")  -- Middle-click also targets first
         
         -- PreClick handler - updates attributes dynamically like RaidSummon
         btn:SetScript("PreClick", function(self, button)
@@ -600,8 +604,25 @@ function addon:UpdateListDisplay()
                 print("|cFFFFAA00PortHelper:|r |cFF00FF00Summoning " .. self.info.name .. "|r - Cast your ritual!")
                 -- Send port messages after the spell cast initiates
                 C_Timer.After(0.1, function()
-                    addon:SendPortMessages(self.info)
+                    addon:SendPortMessages(self.info, false)
                 end)
+            elseif button == "MiddleButton" then
+                -- Middle-click: Announce port for Meeting Stone usage (no spell cast)
+                -- Check if already porting this person
+                if self.isPorting then
+                    print("|cFFFFAA00PortHelper:|r Already summoning " .. self.info.name .. "!")
+                    return
+                end
+                
+                -- Mark as porting and update visual
+                self.isPorting = true
+                self:SetBackdropColor(0.0, 0.2, 0.3, 0.9)  -- Blue-ish to indicate Meeting Stone port
+                self:SetBackdropBorderColor(0.3, 0.7, 1.0, 1)  -- Blue border
+                self.nameText:SetText("|cFF00AAFF>>|r " .. self.info.name)  -- Add blue >> prefix
+                
+                print("|cFFFFAA00PortHelper:|r |cFF00AAFFAnnouncing port for " .. self.info.name .. "|r - Use the Meeting Stone!")
+                -- Send port messages for Meeting Stone usage
+                addon:SendPortMessages(self.info, true)
             end
         end)
         
@@ -620,7 +641,7 @@ function addon:UpdateListDisplay()
 end
 
 -- Send port messages (called after secure targeting)
-function addon:SendPortMessages(info)
+function addon:SendPortMessages(info, isMeetingStone)
     local selectedRaid = PortHelperDB.selectedRaid
     if not selectedRaid then return end
     
@@ -633,7 +654,11 @@ function addon:SendPortMessages(info)
     -- Send whisper
     SendChatMessage(whisperMsg, "WHISPER", nil, info.name)
     
-    print("|cFFFFAA00PortHelper:|r Porting " .. info.name .. " - Cast your portal/summon now!")
+    if isMeetingStone then
+        print("|cFFFFAA00PortHelper:|r Porting " .. info.name .. " - Use the Meeting Stone!")
+    else
+        print("|cFFFFAA00PortHelper:|r Porting " .. info.name .. " - Cast your Ritual of Summoning!")
+    end
 end
 
 -- Legacy function for compatibility
