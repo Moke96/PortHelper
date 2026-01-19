@@ -16,6 +16,7 @@ A World of Warcraft Classic Era addon to help Warlocks manage raid summoning by 
 - **One-Click Targeting**: Left-click a name to target that player
 - **One-Click Summoning**: Right-click to cast Ritual of Summoning (Warlocks only)
 - **Meeting Stone Support**: Middle-click to announce port when using Meeting Stones (any class)
+- **Auto-Detect Meeting Stone**: Automatically announces when you use a Meeting Stone to summon a raid member (toggle in UI)
 - **Auto-Announce**: Automatically sends raid and whisper messages when summoning
 - **Visual Feedback**: Players being summoned are highlighted to prevent accidental double-summons
 - **Class Colors**: Names are displayed in their class colors for easy identification
@@ -79,13 +80,14 @@ The addon automatically saves your settings including:
 - Last selected raid
 - Window position
 - Auto-scan preference
+- Auto-announce preference (for Meeting Stone detection)
 
 ## Requirements
 
 - World of Warcraft Classic Era (1.15.x)
 - Must be in a raid group to scan members
 - Warlock class required for Ritual of Summoning functionality (right-click)
-- Any class can use Meeting Stone announcements (middle-click)
+- Any class can use Meeting Stone announcements (middle-click or auto-detect)
 
 ## Known Limitations
 
