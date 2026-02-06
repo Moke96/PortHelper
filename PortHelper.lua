@@ -6,6 +6,7 @@ local defaults = {
     selectedRaid = nil,
     portMessage = "Porting %s to %s!",
     whisperMessage = "Incoming port to %s! Please accept.",
+    autoAnnounce = true,  -- Auto-announce when using Meeting Stone
 }
 
 -- Classic Era Raid locations with their instance IDs (language-independent)
@@ -204,9 +205,35 @@ local function CreateMainFrame()
         PortHelperDB.autoScan = self:GetChecked()
     end)
     
-    -- Needs port list header
+    -- Auto-announce checkbox (for Meeting Stone auto-detection)
+    local autoAnnounce = CreateFrame("CheckButton", "PortHelperAutoAnnounce", PortHelper, "UICheckButtonTemplate")
+    autoAnnounce:SetPoint("TOPLEFT", scanBtn, "BOTTOMLEFT", -5, -5)
+    autoAnnounce.text = autoAnnounce:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    autoAnnounce.text:SetPoint("LEFT", autoAnnounce, "RIGHT", 0, 0)
+    autoAnnounce.text:SetText("Auto-announce (Meeting Stone)")
+    autoAnnounce:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine("Auto-announce Meeting Stone", 1, 1, 1)
+        GameTooltip:AddLine("When enabled, automatically announces", 0.7, 0.7, 0.7)
+        GameTooltip:AddLine("the port when you use a Meeting Stone", 0.7, 0.7, 0.7)
+        GameTooltip:AddLine("to summon a raid member.", 0.7, 0.7, 0.7)
+        GameTooltip:Show()
+    end)
+    autoAnnounce:SetScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+    autoAnnounce:SetScript("OnClick", function(self)
+        PortHelperDB.autoAnnounce = self:GetChecked()
+        if self:GetChecked() then
+            print("|cFFFFAA00PortHelper:|r Auto-announce |cFF00FF00enabled|r - will announce when you use a Meeting Stone")
+        else
+            print("|cFFFFAA00PortHelper:|r Auto-announce |cFFFF0000disabled|r")
+        end
+    end)
+    
+    -- Needs port list header (adjusted position for new checkbox)
     local listHeader = PortHelper:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    listHeader:SetPoint("TOPLEFT", 15, -130)
+    listHeader:SetPoint("TOPLEFT", 15, -155)
     listHeader:SetText("Needs Port:")
     
     -- Count display
@@ -226,11 +253,12 @@ local function CreateMainFrame()
     PortHelper.scrollChild = scrollChild
     PortHelper.raidDropdown = raidDropdown
     PortHelper.autoScan = autoScan
+    PortHelper.autoAnnounce = autoAnnounce
     
     -- Help text
     local helpText = PortHelper:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     helpText:SetPoint("BOTTOM", 0, 15)
-    helpText:SetText("Left: Target | Right: Summon")
+    helpText:SetText("L: Target | R: Summon | M: Announce")
     helpText:SetTextColor(0.7, 0.7, 0.7)
     
     PortHelper:Hide()
@@ -543,6 +571,7 @@ function addon:UpdateListDisplay()
             GameTooltip:AddLine(" ")
             GameTooltip:AddLine("Left-click: Target", 0.5, 1, 0.5)
             GameTooltip:AddLine("Right-click: Cast Ritual of Summoning", 1, 0.5, 0.5)
+            GameTooltip:AddLine("Middle-click: Announce port (Meeting Stone)", 0.5, 0.8, 1)
             GameTooltip:AddLine("(Target first with left-click)", 0.6, 0.6, 0.6)
             GameTooltip:Show()
         end)
@@ -570,6 +599,9 @@ function addon:UpdateListDisplay()
         -- Right-click: cast summon spell (target must be selected first via left-click)
         btn:SetAttribute("type2", "spell")
         btn:SetAttribute("spell", "698")  -- 698 = Ritual of Summoning spell ID
+        
+        -- Middle-click: just announce (for Meeting Stone usage)
+        btn:SetAttribute("type3", "target")  -- Middle-click also targets first
         
         -- PreClick handler - updates attributes dynamically like RaidSummon
         btn:SetScript("PreClick", function(self, button)
@@ -600,8 +632,25 @@ function addon:UpdateListDisplay()
                 print("|cFFFFAA00PortHelper:|r |cFF00FF00Summoning " .. self.info.name .. "|r - Cast your ritual!")
                 -- Send port messages after the spell cast initiates
                 C_Timer.After(0.1, function()
-                    addon:SendPortMessages(self.info)
+                    addon:SendPortMessages(self.info, false)
                 end)
+            elseif button == "MiddleButton" then
+                -- Middle-click: Announce port for Meeting Stone usage (no spell cast)
+                -- Check if already porting this person
+                if self.isPorting then
+                    print("|cFFFFAA00PortHelper:|r Already summoning " .. self.info.name .. "!")
+                    return
+                end
+                
+                -- Mark as porting and update visual
+                self.isPorting = true
+                self:SetBackdropColor(0.0, 0.2, 0.3, 0.9)  -- Blue-ish to indicate Meeting Stone port
+                self:SetBackdropBorderColor(0.3, 0.7, 1.0, 1)  -- Blue border
+                self.nameText:SetText("|cFF00AAFF>>|r " .. self.info.name)  -- Add blue >> prefix
+                
+                print("|cFFFFAA00PortHelper:|r |cFF00AAFFAnnouncing port for " .. self.info.name .. "|r - Use the Meeting Stone!")
+                -- Send port messages for Meeting Stone usage
+                addon:SendPortMessages(self.info, true)
             end
         end)
         
@@ -620,7 +669,7 @@ function addon:UpdateListDisplay()
 end
 
 -- Send port messages (called after secure targeting)
-function addon:SendPortMessages(info)
+function addon:SendPortMessages(info, isMeetingStone)
     local selectedRaid = PortHelperDB.selectedRaid
     if not selectedRaid then return end
     
@@ -633,7 +682,11 @@ function addon:SendPortMessages(info)
     -- Send whisper
     SendChatMessage(whisperMsg, "WHISPER", nil, info.name)
     
-    print("|cFFFFAA00PortHelper:|r Porting " .. info.name .. " - Cast your portal/summon now!")
+    if isMeetingStone then
+        print("|cFFFFAA00PortHelper:|r Porting " .. info.name .. " - Use the Meeting Stone!")
+    else
+        print("|cFFFFAA00PortHelper:|r Porting " .. info.name .. " - Cast your Ritual of Summoning!")
+    end
 end
 
 -- Legacy function for compatibility
@@ -727,10 +780,55 @@ local function CreateMinimapButton()
     minimapBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 end
 
+-- Track recently announced summons to prevent duplicates
+local recentSummons = {}
+local SUMMON_COOLDOWN = 10 -- seconds before allowing re-announcement for same player
+
+-- Auto-announce summon for target (used by auto-detection)
+function addon:AutoAnnounceSummon(targetName, targetUnit)
+    -- Check if we recently announced for this player
+    local now = GetTime()
+    if recentSummons[targetName] and (now - recentSummons[targetName]) < SUMMON_COOLDOWN then
+        return false -- Already announced recently
+    end
+    
+    -- Find player info from needsPortList or create basic info
+    local info = nil
+    for _, playerInfo in ipairs(needsPortList) do
+        if playerInfo.name == targetName then
+            info = playerInfo
+            break
+        end
+    end
+    
+    -- If not in list, create basic info from target
+    if not info and targetUnit and UnitExists(targetUnit) then
+        info = {
+            name = targetName,
+            unit = targetUnit,
+        }
+    end
+    
+    if not info then
+        return false
+    end
+    
+    -- Mark as recently announced
+    recentSummons[targetName] = now
+    
+    -- Send the port messages (auto-detected as Meeting Stone)
+    addon:SendPortMessages(info, true)
+    print("|cFFFFAA00PortHelper:|r |cFF00AAFFAuto-detected summon for " .. targetName .. "|r")
+    
+    return true
+end
+
 -- Event handler
 PortHelper:RegisterEvent("ADDON_LOADED")
 PortHelper:RegisterEvent("GROUP_ROSTER_UPDATE")
-PortHelper:SetScript("OnEvent", function(self, event, arg1)
+PortHelper:RegisterEvent("UNIT_SPELLCAST_SENT")
+PortHelper:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
+PortHelper:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4)
     if event == "ADDON_LOADED" and arg1 == addonName then
         InitializeDB()
         CreateMainFrame()
@@ -741,10 +839,45 @@ PortHelper:SetScript("OnEvent", function(self, event, arg1)
             PortHelper.autoScan:SetChecked(PortHelperDB.autoScan)
         end
         
+        -- Restore auto-announce state
+        if PortHelper.autoAnnounce then
+            PortHelper.autoAnnounce:SetChecked(PortHelperDB.autoAnnounce)
+        end
+        
         print("|cFFFFAA00PortHelper|r loaded! Type |cFF00FF00/ph|r or |cFF00FF00/porthelper|r to toggle.")
     elseif event == "GROUP_ROSTER_UPDATE" then
         if PortHelperDB.autoScan and IsInRaid() and PortHelper:IsShown() then
             addon:ScanRaidMembers()
+        end
+    elseif event == "UNIT_SPELLCAST_SENT" or event == "UNIT_SPELLCAST_CHANNEL_START" then
+        -- These events fire when the player casts or channels a spell
+        -- Meeting Stone summoning triggers these events with the target player
+        local unit = arg1
+        
+        -- Common validation
+        if unit ~= "player" then return end
+        if not PortHelperDB.autoAnnounce then return end
+        if not IsInRaid() then return end
+        
+        -- Get target name based on event type
+        local targetName = nil
+        if event == "UNIT_SPELLCAST_SENT" then
+            -- arg2 is the target name for UNIT_SPELLCAST_SENT
+            targetName = arg2
+        else
+            -- For channeling, use current target
+            targetName = UnitName("target")
+        end
+        
+        if not targetName or targetName == "" then return end
+        
+        -- Check if target is a raid member and announce
+        for i = 1, MAX_RAID_MEMBERS do
+            local name = GetRaidRosterInfo(i)
+            if name and name == targetName then
+                addon:AutoAnnounceSummon(targetName, "raid" .. i)
+                break
+            end
         end
     end
 end)

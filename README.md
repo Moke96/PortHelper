@@ -15,6 +15,8 @@ A World of Warcraft Classic Era addon to help Warlocks manage raid summoning by 
 - **"Other" Mode**: Ignore instance checks entirely - just show everyone who isn't close to you (great for world bosses, meeting spots, etc.)
 - **One-Click Targeting**: Left-click a name to target that player
 - **One-Click Summoning**: Right-click to cast Ritual of Summoning (Warlocks only)
+- **Meeting Stone Support**: Middle-click to announce port when using Meeting Stones (any class)
+- **Auto-Detect Meeting Stone**: Automatically announces when you use a Meeting Stone to summon a raid member (toggle in UI)
 - **Auto-Announce**: Automatically sends raid and whisper messages when summoning
 - **Visual Feedback**: Players being summoned are highlighted to prevent accidental double-summons
 - **Class Colors**: Names are displayed in their class colors for easy identification
@@ -57,14 +59,20 @@ A World of Warcraft Classic Era addon to help Warlocks manage raid summoning by 
 3. Click **Scan Raid** to find members who need summons
 4. **Left-click** a name to target that player
 5. **Right-click** a name to:
-   - Cast Ritual of Summoning
+   - Cast Ritual of Summoning (Warlock only)
    - Send a raid announcement
    - Whisper the player being summoned
+6. **Middle-click** a name to:
+   - Announce the port (for Meeting Stone / Summoning Stone usage)
+   - Send a raid announcement
+   - Whisper the player being summoned
+   - (Does NOT cast Ritual of Summoning - any class can use this)
 
 ### Visual Indicators
 
 - **Normal**: Dark background - ready to be summoned
-- **Orange/Highlighted**: Currently being summoned - prevents accidental double-clicks
+- **Orange/Highlighted**: Being summoned via Ritual of Summoning
+- **Blue/Highlighted**: Being summoned via Meeting Stone
 
 ## Configuration
 
@@ -72,18 +80,21 @@ The addon automatically saves your settings including:
 - Last selected raid
 - Window position
 - Auto-scan preference
+- Auto-announce preference (for Meeting Stone detection)
 
 ## Requirements
 
 - World of Warcraft Classic Era (1.15.x)
 - Must be in a raid group to scan members
-- Warlock class required for Ritual of Summoning functionality
+- Warlock class required for Ritual of Summoning functionality (right-click)
+- Any class can use Meeting Stone announcements (middle-click or auto-detect)
 
 ## Known Limitations
 
 - Proximity detection only works for players you can see (within render distance)
 - Zone detection may not work for players who are too far away
 - Ritual of Summoning requires two other players to click the portal
+- Meeting Stones require two other players to click the portal
 
 ## Credits
 
