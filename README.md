@@ -3,13 +3,14 @@
 A World of Warcraft Classic Era addon to help Warlocks manage raid summoning by tracking which raid members need to be summoned to the raid instance or your current location.
 
 ![WoW Classic Era](https://img.shields.io/badge/WoW-Classic%20Era-yellow)
+![WoW TBC Classic](https://img.shields.io/badge/WoW-TBC%20Classic-green)
 ![AI Generated](https://img.shields.io/badge/AI-Generated-blue)
 
 > ⚠️ **Note:** This addon was entirely generated using AI (GitHub Copilot / Claude) as an experiment in AI-assisted addon development.
 
 ## Features
 
-- **Raid Instance Tracking**: Select from all Classic Era raids (Molten Core, BWL, Onyxia, ZG, AQ20, AQ40, Naxxramas)
+- **Raid Instance Tracking**: Select from all Classic Era and TBC raids
 - **Smart Detection**: Automatically detects who is NOT at the raid instance or entrance zones
 - **Proximity Check**: Also checks if players are nearby (within ~28 yards)
 - **"Other" Mode**: Ignore instance checks entirely - just show everyone who isn't close to you (great for world bosses, meeting spots, etc.)
@@ -24,6 +25,8 @@ A World of Warcraft Classic Era addon to help Warlocks manage raid summoning by 
 
 ## Supported Raids
 
+### Classic Era
+
 | Raid | Entrance Zone |
 |------|---------------|
 | Molten Core | Blackrock Mountain |
@@ -33,6 +36,25 @@ A World of Warcraft Classic Era addon to help Warlocks manage raid summoning by 
 | Ruins of Ahn'Qiraj | Silithus |
 | Temple of Ahn'Qiraj | Silithus |
 | Naxxramas | Eastern Plaguelands |
+
+### The Burning Crusade
+
+| Raid | Entrance Zone |
+|------|---------------|
+| Karazhan | Deadwind Pass |
+| Gruul's Lair | Blade's Edge Mountains |
+| Magtheridon's Lair | Hellfire Peninsula |
+| Serpentshrine Cavern | Zangarmarsh |
+| Tempest Keep: The Eye | Netherstorm |
+| Battle for Mount Hyjal | Tanaris (Caverns of Time) |
+| Black Temple | Shadowmoon Valley |
+| Sunwell Plateau | Isle of Quel'Danas |
+| Zul'Aman | Ghostlands |
+
+### Other
+
+| Option | Description |
+|--------|-------------|
 | Other (Nearby Check) | Any location |
 
 ## Installation
@@ -84,7 +106,7 @@ The addon automatically saves your settings including:
 
 ## Requirements
 
-- World of Warcraft Classic Era (1.15.x)
+- World of Warcraft Classic Era (1.15.x) or TBC Classic (2.5.x)
 - Must be in a raid group to scan members
 - Warlock class required for Ritual of Summoning functionality (right-click)
 - Any class can use Meeting Stone announcements (middle-click or auto-detect)
